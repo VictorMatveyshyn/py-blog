@@ -6,7 +6,7 @@
     <ul>
       {% for post in post_list %}
         <li>
-            Li
+            <p>{{post.id}} {{post.title}} (created by {{post.owner}})
         </li>
       {% endfor %}
     </ul>
