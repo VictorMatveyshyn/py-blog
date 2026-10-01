@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="post-container">
+<h3>Title <b>{{post.title}}</b></h3>
+<h4>created by <b>{{post.owner}}</b> <i>at {{post.created_time}}</i> </h4>
+<p>{{post.content}}</p>
+</div>
+
+<a href="{{ request.META.HTTP_REFERER|default:''}}" class="btn btn-secondary">Return</a>
+
+<hr style="margin: 40px 0;">
+<p>Comments:</p>
+    <div class="comments-list">
+        {% for comment in post.commentary_set.all %}
+            <div class="comment-item" style="background: #f9f9f9; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                <strong>{{ comment.user }}</strong>:
+                <p>{{ comment.content }}</p>
+            </div>
+        {% empty %}
+            <p>До цього поста ще немає жодного коментаря. Будьте першим!</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

@@ -6,7 +6,11 @@
     <ul>
       {% for post in post_list %}
         <li>
-            <p>{{post.id}} {{post.title}} (created by {{post.owner}})
+            <p><a href="{% url 'blog:post-detail' pk=post.id %}">
+                     {{post.title}} </a>
+              created by {{post.owner}} at {{post.created_time}}
+              commentary: {{post.comment_count}}
+
         </li>
       {% endfor %}
     </ul>
