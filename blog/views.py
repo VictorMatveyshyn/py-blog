@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 from django.views import generic
 
+from blog.forms import AddCommentForm
 from blog.models import Post
 
 
@@ -16,3 +17,22 @@ class IndexListView(generic.ListView):
 
 class PostDetailView(generic.DetailView):
     model = Post
+    template_name = "blog/post_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        context["form"] = AddCommentForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()  # отримуємо пост
+        form = AddCommentForm(request.POST)  # створюємо форму з даних
+        if form.is_valid():  # перевіряємо чи дані валідні
+            commentary = form.save(commit=False)  # зберігаємо, але не в БД
+            commentary.user = request.user  # додаємо користувача
+            commentary.post = self.object  # додаємо пост
+            commentary.save()  # зберігаємо в БД
+        return self.get(request, *args, **kwargs)  # повертаємо сторінку
+
+
+
