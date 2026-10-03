@@ -19,6 +19,9 @@ class PostDetailView(generic.DetailView):
     model = Post
     template_name = "blog/post_detail.html"
 
+    def get_queryset(self):
+        return Post.objects.annotate(comment_count=Count("commentary"))
+
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
         context["form"] = AddCommentForm()

@@ -9,7 +9,7 @@
 </div>
 
 <hr style="margin: 40px 0;">
-<p><b>{{ post.commentary_set.count }} comments</b></p>
+<p><b>{{ post.comment_count }} comments</b></p>
     <div class="post-comments-list">
         {% for comment in post.commentary_set.all %}
             <div class="comment-item" >
