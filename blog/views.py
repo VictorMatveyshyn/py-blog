@@ -25,6 +25,9 @@ class PostDetailView(generic.DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.get(request, *args, **kwargs)
+
         self.object = self.get_object()  # отримуємо пост
         form = AddCommentForm(request.POST)  # створюємо форму з даних
         if form.is_valid():  # перевіряємо чи дані валідні
@@ -32,7 +35,7 @@ class PostDetailView(generic.DetailView):
             commentary.user = request.user  # додаємо користувача
             commentary.post = self.object  # додаємо пост
             commentary.save()  # зберігаємо в БД
+        else:
+            context = self.get_context_data(object=self.object, form=form)
+            return self.get(request, *args, **kwargs)
         return self.get(request, *args, **kwargs)  # повертаємо сторінку
-
-
-
