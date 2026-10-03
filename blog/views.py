@@ -39,6 +39,5 @@ class PostDetailView(generic.DetailView):
             commentary.post = self.object  # додаємо пост
             commentary.save()  # зберігаємо в БД
         else:
-            context = self.get_context_data(object=self.object, form=form)
             return self.get(request, *args, **kwargs)
         return self.get(request, *args, **kwargs)  # повертаємо сторінку
