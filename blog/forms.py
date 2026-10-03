@@ -7,4 +7,4 @@ class AddCommentForm(forms.ModelForm):
     class Meta:
         model = Commentary
         fields = ["content"]
-        label = "Label"
+        labels = {"content": "Your comment"}
