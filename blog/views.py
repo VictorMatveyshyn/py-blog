@@ -12,7 +12,9 @@ class IndexListView(generic.ListView):
     template_name = "blog/index.html"
     context_object_name = "post_list"
     paginate_by = 5
-    queryset = Post.objects.all().annotate(comment_count=Count("commentary"))
+    queryset = (Post.objects.all().
+                annotate(comment_count=Count("commentary")).
+                order_by("-created_time"))
 
 
 class PostDetailView(generic.DetailView):
