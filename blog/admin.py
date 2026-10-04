@@ -10,6 +10,7 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ("owner", "created_time")
     search_fields = ("title", "content")
 
+
 @admin.register(Commentary)
 class CommentaryAdmin(admin.ModelAdmin):
     pass
