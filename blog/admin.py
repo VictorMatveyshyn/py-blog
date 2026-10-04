@@ -7,8 +7,8 @@ from blog.models import Post, User, Commentary
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    pass
-
+    list_filter = ("owner", "created_time")
+    search_fields = ("title", "content")
 
 @admin.register(Commentary)
 class CommentaryAdmin(admin.ModelAdmin):

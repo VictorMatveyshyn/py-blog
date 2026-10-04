@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "blog",
     "debug_toolbar",
     "crispy_forms",
-    # "crispy_bootstrap",
     "crispy_bootstrap4",
 
 ]
@@ -145,5 +144,6 @@ MAILERS = {
 
 AUTH_USER_MODEL = "blog.User"
 
-CRISPY_TEMPLATE_PACK="bootstrap4"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+
+CRISPY_TEMPLATE_PACK="bootstrap4"

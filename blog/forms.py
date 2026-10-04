@@ -8,3 +8,6 @@ class AddCommentForm(forms.ModelForm):
         model = Commentary
         fields = ["content"]
         labels = {"content": "Your comment"}
+        widgets = {
+            "content": forms.Textarea(attrs={"rows": 3}),
+        }
