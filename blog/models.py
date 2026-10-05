@@ -19,6 +19,9 @@ class Post(models.Model):
     class Meta:
         ordering = ["-created_time"]
 
+    def __str__(self):
+        return self.title
+
 
 class Commentary(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -29,3 +32,6 @@ class Commentary(models.Model):
 
     class Meta:
         ordering = ["-created_time"]
+
+    def __str__(self):
+        return f"Comment by {self.user} on {self.post}"

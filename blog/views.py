@@ -1,6 +1,6 @@
 from django.db.models import Count
 from django.http import HttpResponse, HttpRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 
 from blog.forms import AddCommentForm
@@ -14,6 +14,7 @@ class IndexListView(generic.ListView):
     paginate_by = 5
     queryset = (Post.objects.all().
                 annotate(comment_count=Count("commentary")).
+                prefetch_related("commentary_set").
                 order_by("-created_time"))
 
 
@@ -27,19 +28,27 @@ class PostDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
         context["form"] = AddCommentForm()
+        pending_comment = self.request.session.pop("pending_comment", "")
+
+        if pending_comment:
+            context["form"] = \
+                (AddCommentForm(initial={"content": pending_comment}))
         return context
 
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return self.get(request, *args, **kwargs)
+            request.session["pending_comment"] = (request.POST
+                                                  .get("content", ""))
+            return redirect("/admin/login/?next=%s" % request.path)
 
-        self.object = self.get_object()  # отримуємо пост
-        form = AddCommentForm(request.POST)  # створюємо форму з даних
-        if form.is_valid():  # перевіряємо чи дані валідні
-            commentary = form.save(commit=False)  # зберігаємо, але не в БД
-            commentary.user = request.user  # додаємо користувача
-            commentary.post = self.object  # додаємо пост
-            commentary.save()  # зберігаємо в БД
+        self.object = self.get_object()
+        form = AddCommentForm(request.POST)
+        if form.is_valid():
+            commentary = form.save(commit=False)
+            commentary.user = request.user
+            commentary.post = self.object
+            commentary.save()
         else:
-            return self.get(request, *args, **kwargs)
-        return self.get(request, *args, **kwargs)  # повертаємо сторінку
+            return redirect("blog:post-detail", pk=self.object.pk)
+        context = self.get_context_data(object=self.object, form=form)
+        return render(request, self.template_name, context)

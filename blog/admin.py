@@ -13,7 +13,9 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Commentary)
 class CommentaryAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("user", "post", "content")
+    search_fields = ("user", "content")
+    list_filter = ("user", "created_time")
 
 
 admin.site.register(User, UserAdmin)
